@@ -197,6 +197,18 @@ class TestScopeAnalyzer:
             "@return": MatchSymbol("@return", "var", "auto"),
         }
 
+    def test_assignexpr_loop_tests_are_var(self):
+        scopes = self.analyze("""
+        def foo() -> None:
+            while (x := 1):
+                break
+            for _ in [1]:
+                pass
+        """)
+
+        foo_scope = scopes.by_funcdef(self.mod.get_funcdef("foo"))
+        assert foo_scope._symbols["x"] == MatchSymbol("x", "var", "auto")
+
     def test_assignexpr_globals(self):
         scopes = self.analyze("""
         x = 1
