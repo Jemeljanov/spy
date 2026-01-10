@@ -96,6 +96,8 @@ jobs:
         run: |
           uv pip install pytest-xdist
           uv run pytest -n auto -m "not mypy" --junit-xml=test-results.xml
+        env:
+          CC: clang
 
       - name: Run mypy
         run: |
