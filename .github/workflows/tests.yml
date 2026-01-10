@@ -88,6 +88,7 @@ jobs:
 
       - name: Build libspy
         run: |
+          source .venv/bin/activate
           cd spy/libspy
           make
 
