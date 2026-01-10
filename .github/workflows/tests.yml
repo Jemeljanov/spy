@@ -61,6 +61,10 @@ jobs:
           enable-cache: true
           cache-dependency-glob: pyproject.toml
 
+      - name: Create virtualenv
+        run: |
+          uv venv
+
       - name: Display versions
         run: |
           echo PATH="$PATH"
