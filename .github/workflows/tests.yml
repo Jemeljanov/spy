@@ -54,29 +54,32 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
 
       - name: Display versions
         run: |
           echo PATH="$PATH"
           echo
           echo python && python --version && echo
-          echo pip && pip --version && echo
+          echo uv && uv --version && echo
           echo clang && clang --version && echo
           echo gcc && gcc --version && echo
 
       - name: Install project
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .[dev]
+          uv pip install -e .[dev]
 
       - name: Linter
         run: |
-          ruff check .
+          uv run ruff check .
 
       - name: Format check
         run: |
-          ruff format --check .
+          uv run ruff format --check .
 
       - name: Build libspy
         run: |
@@ -85,12 +88,12 @@ jobs:
 
       - name: Run tests
         run: |
-          pip install pytest-xdist
-          pytest -n auto -m "not mypy" --junit-xml=test-results.xml
+          uv pip install pytest-xdist
+          uv run pytest -n auto -m "not mypy" --junit-xml=test-results.xml
 
       - name: Run mypy
         run: |
-          mypy
+          uv run mypy
 
       - name: Surface failing tests
         if: always()
